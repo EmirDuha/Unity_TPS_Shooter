@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
     //General Data
     private PlayerControls controls;
     public CharacterController characterController;
+    private Animator animator;
 
     [Header("Movement Data")]
     private Vector3 movementDirection;
@@ -39,12 +40,23 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         characterController = GetComponent<CharacterController>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     private void Update()
     {
         ApplyMovement();
         AimTowardsMouse();
+        AnimatorControllers();
+    }
+
+    private void AnimatorControllers()
+    {
+        float xVelocity = Vector3.Dot(movementDirection.normalized, transform.right);
+        float zVelocity = Vector3.Dot(movementDirection.normalized, transform.forward);
+
+        animator.SetFloat("xVelocity", xVelocity, .1f, Time.deltaTime);
+        animator.SetFloat("zVelocity", zVelocity, .1f, Time.deltaTime);
     }
 
     private void AimTowardsMouse()
