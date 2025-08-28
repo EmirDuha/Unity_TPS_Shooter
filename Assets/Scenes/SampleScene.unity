@@ -1284,6 +1284,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterController: {fileID: 1904391014}
   walkSpeed: 2
+  runSpeed: 4
   aimLayerMask:
     serializedVersion: 2
     m_Bits: 192
