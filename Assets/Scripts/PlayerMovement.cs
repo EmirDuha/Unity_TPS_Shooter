@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     //General Data
+    private Player player;
     private PlayerControls controls;
     public CharacterController characterController;
     private Animator animator;
@@ -30,9 +31,28 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 aimInput;
     private bool isRunning;
 
-    private void Awake()
+    private void Start()
     {
-        controls = new PlayerControls();
+        player = GetComponent<Player>();
+
+        characterController = GetComponent<CharacterController>();
+        animator = GetComponentInChildren<Animator>();
+
+        speed = walkSpeed;
+
+        AssignInputEvents();
+    }
+
+    private void Update()
+    {
+        ApplyMovement();
+        AimTowardsMouse();
+        AnimatorControllers();
+    }
+
+    private void AssignInputEvents()
+    {
+        controls = player.controls;
 
         controls.Character.Movement.performed += context => moveInput = context.ReadValue<Vector2>();
         controls.Character.Movement.canceled += context => moveInput = Vector2.zero;
@@ -42,21 +62,6 @@ public class PlayerMovement : MonoBehaviour
 
         controls.Character.Run.performed += context => { speed = runSpeed; isRunning = true; };
         controls.Character.Run.canceled += context => { speed = walkSpeed; isRunning = false; };
-    }
-
-    private void Start()
-    {
-        characterController = GetComponent<CharacterController>();
-        animator = GetComponentInChildren<Animator>();
-
-        speed = walkSpeed;
-    }
-
-    private void Update()
-    {
-        ApplyMovement();
-        AimTowardsMouse();
-        AnimatorControllers();
     }
 
     private void AnimatorControllers()
@@ -107,14 +112,4 @@ public class PlayerMovement : MonoBehaviour
             verticalVelocity = -.5f;
     }
     
-    private void OnEnable()
-    {
-        controls.Enable();
-    }
-
-    private void OnDisable()
-    {
-        controls.Disable();
-    }
-
 }
